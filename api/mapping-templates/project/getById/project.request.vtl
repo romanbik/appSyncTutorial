@@ -1,0 +1,14 @@
+#**
+Select statement for a relational database data source
+*#
+
+{
+    "version": "2018-05-29",
+    "statements": [
+        "select * from project where id = :ID",
+        "select * from task where projectId = :ID"
+    ]
+    "variableMap": {
+		":ID": $util.toJson($ctx.args.id.replace("'", "''").replace("\", "\\"))
+	}
+}

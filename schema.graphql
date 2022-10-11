@@ -1,0 +1,51 @@
+type Mutation {
+  createProject(id: ID, title: String!): Project
+  updateProject(tittle: String): Project
+  deleteProject(id: ID): Project
+  createTask(id: ID, input: TaskInput): Task
+}
+
+type Project {
+  id: ID!
+  title: String!
+  tasks: [Task]
+}
+
+type Query {
+  project(id: ID!): Project
+  # Get a single value of type 'Task' by primary key.
+  task(id: ID!): Task
+  # Get an array of type 'Task'.
+  tasks(orderBy: TasksOrderBY): [Task]
+}
+
+type SubTask {
+  id: ID!
+  title: String!
+  description: String
+  task: Task!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  project: Project!
+}
+
+input TaskInput {
+  id: ID!
+  title: String!
+  description: String!
+  projectId: ID!
+}
+
+enum TasksOrderBY {
+  ID_DESC
+  ID_ASC
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

@@ -1,0 +1,15 @@
+{
+  "name": "project-api-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "sls deploy --verbose",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Roman Bikchentaev",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^2.65.0"
+  }
+}

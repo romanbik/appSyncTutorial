@@ -1,0 +1,12 @@
+#set($id=$ctx.args.id)
+
+{
+    "version": "2018-05-29",
+    "statements": [
+        "select * from project WHERE id = :ID",
+        "delete from project WHERE id = :ID"
+    ],
+	"variableMap": {
+		":ID": $util.toJson($ctx.args.id.replace("'", "''").replace("\", "\\"))
+	}
+}

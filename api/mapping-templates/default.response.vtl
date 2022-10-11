@@ -1,0 +1,5 @@
+## Raise a GraphQL field error in case of a datasource invocation error
+#if($ctx.error)
+    $utils.error($ctx.error.message, $ctx.error.type)
+#end
+$utils.toJson($utils.rds.toJsonObject($ctx.result)[1][0])
