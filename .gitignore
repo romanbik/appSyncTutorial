@@ -47,3 +47,6 @@ yarn-error.log*
 # Test output
 .nyc_output
 coverage
+
+# Env files
+.env

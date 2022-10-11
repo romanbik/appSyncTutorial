@@ -11,5 +11,9 @@
   "license": "ISC",
   "devDependencies": {
     "serverless": "^2.65.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1231.0",
+    "sequelize": "^6.25.0"
   }
 }
