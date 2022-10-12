@@ -50,5 +50,3 @@ coverage
 
 # Env files
 .env
-
-**/db
