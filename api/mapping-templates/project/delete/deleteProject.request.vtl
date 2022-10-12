@@ -3,10 +3,7 @@
 {
     "version": "2018-05-29",
     "statements": [
-        "select * from project WHERE id = :ID",
-        "delete from project WHERE id = :ID"
+        "select * from project WHERE id = UNHEX(REPLACE('$id','-','')",
+        "delete from project WHERE id = UNHEX(REPLACE('$id','-','')"
     ],
-	"variableMap": {
-		":ID": $util.toJson($ctx.args.id.replace("'", "''").replace("\", "\\"))
-	}
 }

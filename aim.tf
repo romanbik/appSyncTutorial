@@ -22,8 +22,6 @@ EOF
 # --- Policies ---
 # ----------------
 
-# Invoke Lambda policy
-
 data "aws_iam_policy_document" "iam_invoke_rds_secret_manager_policy_document" {
   statement {
     sid = "1"
@@ -59,7 +57,7 @@ resource "aws_iam_policy" "iam_invoke_rds_secret_manager_policy" {
 # --- Attachments ---
 # -------------------
 
-# Attach Invoke Lambda policy to AppSync role.
+# Attach policy to AppSync role.
 
 resource "aws_iam_role_policy_attachment" "appsync_invoke_rds_secret_manager" {
   role       = aws_iam_role.appsync-role.name

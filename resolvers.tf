@@ -29,4 +29,3 @@ resource "aws_appsync_resolver" "getProject_resolver" {
   request_template  = file("./api/mapping-templates/project/getById/project.request.vtl")
   response_template = file("./api/mapping-templates/project/getById/project.response.vtl")
 }
-

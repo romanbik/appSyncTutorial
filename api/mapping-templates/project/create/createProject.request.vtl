@@ -1,12 +1,9 @@
-#set($id=$ctx.args.id)
+#set($id=$utils.autoId())
 
 {
     "version": "2018-05-29",
     "statements": [
-        "insert into project(id,title) values ('$id','$ctx.args.title')",
-        "select * from project WHERE id = :ID"
+        "insert into project(id,title) values (UNHEX(REPLACE('$id','-','')),'$ctx.args.title')",
+        "select * from project WHERE id = UNHEX(REPLACE('$id','-',''))"
     ],
-    "variableMap": {
-		":ID": $util.toJson($ctx.args.id.replace("'", "''").replace("\", "\\"))
-	}
 }

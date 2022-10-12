@@ -1,14 +1,12 @@
 #**
 Select statement for a relational database data source
 *#
+#set($id=$ctx.args.id)
 
 {
     "version": "2018-05-29",
     "statements": [
-        "select * from project where id = :ID",
-        "select * from task where projectId = :ID"
+        "select * from project where id = UNHEX(REPLACE('$id','-','')",
+        "select * from task where projectId = UNHEX(REPLACE('$id','-','')"
     ]
-    "variableMap": {
-		":ID": $util.toJson($ctx.args.id.replace("'", "''").replace("\", "\\"))
-	}
 }
