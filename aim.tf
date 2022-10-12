@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "iam_invoke_rds_secret_manager_policy_document" {
     ]
 
     resources = [
-      aws_secretsmanager_secret.db-pass.arn,
+      aws_rds_cluster.cluster.arn,
     ]
   }
 

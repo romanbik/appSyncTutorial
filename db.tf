@@ -105,10 +105,11 @@ resource "aws_secretsmanager_secret_version" "db-pass-val" {
   secret_id = aws_secretsmanager_secret.db-pass.id
   secret_string = jsonencode(
     {
-      username = aws_rds_cluster.cluster.master_username
-      password = aws_rds_cluster.cluster.master_password
-      engine   = "mysql"
-      host     = aws_rds_cluster.cluster.endpoint
+      username      = aws_rds_cluster.cluster.master_username
+      password      = aws_rds_cluster.cluster.master_password
+      engine        = "mysql"
+      host          = aws_rds_cluster.cluster.endpoint
+      database_name = "appsync"
     }
   )
 }

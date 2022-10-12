@@ -1,34 +1,37 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-SELECT uuid_generate_v4();
 
 --- Creation of project table
 CREATE TABLE IF NOT EXISTS project (
-  id uuid DEFAULT uuid_generate_v4(),
+  id INT AUTO_INCREMENT PRIMARY KEY,
   title varchar(200) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
   PRIMARY KEY (id)
-);
+) engine InnoDb;
 
 --- Creation of task table
 CREATE TABLE IF NOT EXISTS task (
-  id uuid DEFAULT uuid_generate_v4(),
+  id INT AUTO_INCREMENT PRIMARY KEY,
   title varchar(200) NOT NULL,
   description varchar(200),
-  projectId uuid NOT NULL,
+  projectId INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
   PRIMARY KEY (id),
-  CONSTRAINT fk_client
-      FOREIGN KEY(projectId) 
-	  REFERENCES project(id)
+  FOREIGN KEY (projectId)
+      REFERENCES project (id)
+      ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
 --- Creation of sub_task table
 CREATE TABLE IF NOT EXISTS sub_task (
-  id uuid DEFAULT uuid_generate_v4(),
+  id INT AUTO_INCREMENT PRIMARY KEY,
   title varchar(200) NOT NULL,
   description varchar(200),
-  taskId uuid NOT NULL,
+  taskId INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
   PRIMARY KEY (id),
-  CONSTRAINT fk_client
-      FOREIGN KEY(taskId) 
-	  REFERENCES task(id)
+  FOREIGN KEY (taskId)
+      REFERENCES task (id)
+      ON UPDATE RESTRICT ON DELETE CASCADE
 );
