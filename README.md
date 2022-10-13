@@ -55,20 +55,7 @@ run migration file located in /db onside AWS query editor to create tables
 
 So the main goal of project will be provide GraphQl Api for clients. After sending request, App Sync will proceed it to resolvers that first querying database and after it handle db response. Then App Sync will return requested data to the client.
 
-```mermaid
-flowchart TB
-
-client[Client]
-aurora[(Aurora Serverless)]
-appsync[App Sync]
-resolver[Resolver]
-    client --->|Reuqest| appsync
-    appsync ---> resolver
-    resolver --->|Db querying| aurora
-    aurora --->|Db data| resolver
-    resolver ---> appsync
-	appsync --->|Response| client
-```
+![picture alt](appsync.drawio.png "Tables creation")
 
 ---
 
