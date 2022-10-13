@@ -29,3 +29,23 @@ resource "aws_appsync_resolver" "getProject_resolver" {
   request_template  = file("./api/mapping-templates/project/getById/project.request.vtl")
   response_template = file("./api/mapping-templates/project/getById/project.response.vtl")
 }
+
+resource "aws_appsync_resolver" "getTask_resolver" {
+  api_id      = aws_appsync_graphql_api.appsync.id
+  type        = "Query"
+  field       = "task"
+  data_source = aws_appsync_datasource.rds.name
+
+  request_template  = file("./api/mapping-templates/task/getById/task.request.vtl")
+  response_template = file("./api/mapping-templates/task/getById/task.response.vtl")
+}
+
+resource "aws_appsync_resolver" "createTask_resolver" {
+  api_id      = aws_appsync_graphql_api.appsync.id
+  type        = "Mutation"
+  field       = "createTask"
+  data_source = aws_appsync_datasource.rds.name
+
+  request_template  = file("./api/mapping-templates/task/create/createTask.request.vtl")
+  response_template = file("./api/mapping-templates/default.response.vtl")
+}

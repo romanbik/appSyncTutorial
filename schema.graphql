@@ -1,8 +1,8 @@
 type Mutation {
-  createProject(id: ID, title: String!): Project
-  updateProject(tittle: String): Project
+  createProject(title: String!): Project
+  updateProject(id: ID, tittle: String): Project
   deleteProject(id: ID): Project
-  createTask(id: ID, input: TaskInput): Task
+  createTask(input: TaskInput): Task
 }
 
 type Project {
