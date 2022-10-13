@@ -11,10 +11,9 @@
   - [Project structure](#project-structure)
 - [Code](#code)
   - [Main (AppSync)](#appsync)
-  - [Database (AWS Aurora)](#database-aurora)
-    - [Webhook](#webhook)
+  - [Database (AWS Aurora)](#database)
   - [Resolvers](#resolvers)
-    - [Terraform file](#terraform)
+    - [Terraform file](#terraform-file)
     - [VTL files](#vtl-files)
 - [Conclusion](#conclusion)
 
@@ -262,6 +261,26 @@ resource "aws_appsync_resolver" "getProject_resolver" {
 
   request_template  = file("./api/mapping-templates/project/getById/project.request.vtl")
   response_template = file("./api/mapping-templates/project/getById/project.response.vtl")
+}
+
+resource "aws_appsync_resolver" "getTask_resolver" {
+  api_id      = aws_appsync_graphql_api.appsync.id
+  type        = "Query"
+  field       = "task"
+  data_source = aws_appsync_datasource.rds.name
+
+  request_template  = file("./api/mapping-templates/task/getById/task.request.vtl")
+  response_template = file("./api/mapping-templates/task/getById/task.response.vtl")
+}
+
+resource "aws_appsync_resolver" "createTask_resolver" {
+  api_id      = aws_appsync_graphql_api.appsync.id
+  type        = "Mutation"
+  field       = "createTask"
+  data_source = aws_appsync_datasource.rds.name
+
+  request_template  = file("./api/mapping-templates/task/create/createTask.request.vtl")
+  response_template = file("./api/mapping-templates/default.response.vtl")
 }
 ```
 
