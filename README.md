@@ -489,7 +489,7 @@ Select statement for a relational database data source
 }
 ```
 
-Inside response template we firstly set project data and after - task
+Inside response template we firstly set project data and after all tasks corresponding to it.
 
 **Response mapping template:**
 file: `/api/mapping-templates/project/getById/project.response.vtl`
