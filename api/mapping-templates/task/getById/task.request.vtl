@@ -1,0 +1,10 @@
+#**
+Select statement for a relational database data source
+*#
+#set($id=$ctx.args.id)
+{
+    "version": "2018-05-29",
+    "statements": [
+        "select p.title 'projectTitle', t.* from task as t INNER JOIN project as p ON t.projectId = p.id where t.id = UNHEX(REPLACE('$id','-','')"
+    ]
+}

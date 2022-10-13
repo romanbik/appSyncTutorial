@@ -1,0 +1,12 @@
+#set($id=$utils.autoId())
+#set($title = $ctx.args.input.title)
+#set($description = $ctx.args.input.description)
+#set($projectId = $ctx.args.input.projectId)
+
+{
+    "version": "2018-05-29",
+    "statements": [
+        "insert into task values (UNHEX(REPLACE('$id','-','')),'$title','$description',UNHEX(REPLACE('$projectId','-','')))",
+        "select * from task WHERE id = UNHEX(REPLACE('$id','-',''))"
+    ]
+}

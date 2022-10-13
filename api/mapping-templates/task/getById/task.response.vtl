@@ -1,0 +1,10 @@
+## Raise a GraphQL field error in case of a datasource invocation error
+#if($ctx.error)
+    $util.error($ctx.error.message, $ctx.error.type)
+#end
+#set($output = $utils.rds.toJsonObject($ctx.result)[0][0])
+#set($output.project = {
+"id": $output.get('projectId'),   
+"title": $output.get('projectTitle')
+})
+$util.toJson($output)
