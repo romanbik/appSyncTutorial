@@ -494,6 +494,8 @@ file: `/api/mapping-templates/project/getById/project.response.vtl`
 
 # Conclusion
 
+That it! It It may have seemed like a lot, but in reality we have only several Terraform files that will create all needed infrastructure. It is way more easier and faster than to create it all manualy and destroy after.
+
 Though it is possible to construct your AppSync Api without using any backend app or lambdas, it is recommended to omit this Velocity Templates based approach. You’re unlikely to work with it anywhere else unless you’re maintaining Java-based web applications from the beginning of the 21st century. Velocity Templates are hard to test and powerful enough to ruin your application’s logic. Also in this tutorial we didn’t implement any query sanitation, but keep in mind the query injection problem too.
 AWS Appsync doesn’t compare to your if you are building mobile or web applications outside the AWS ecosystem. In this case, consider other managed GraphQL engines:
 
