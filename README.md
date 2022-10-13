@@ -10,8 +10,9 @@
   - [Architecture](#architecture)
   - [Project structure](#project-structure)
 - [Code](#code)
-  - [Main (AppSync)](#appsync)
-  - [Database (AWS Aurora)](#database)
+  - [GraphQl Schema](#graphql-schema)
+  - [Main (AppSync)](#main-appsync)
+  - [Database (AWS Aurora)](#database-aws-aurora)
   - [Resolvers](#resolvers)
     - [Terraform file](#terraform-file)
     - [VTL files](#vtl-files)
@@ -21,7 +22,7 @@
 
 ## Introduction
 
-In this tutorial we will implement GraphQL Api using AppSync and with Aurora Serverless as data source. It is important to note that our approach excludes creation of ANY backend services, all logic will be implemented inside AppSync.
+In this tutorial we will implement GraphQL Api using **AWS AppSync** and with **Aurora Serverless** as data source. It is important to note that our approach excludes creation of ANY backend services, all logic will be implemented inside AppSync. Also as IaC tool we will use Terraform. The business idea of the api will be simple app with project and tasks, every task can have multiply sub-tasks also.
 
 ---
 
@@ -49,6 +50,8 @@ run migration file located in /db onside AWS query editor to create tables
 ---
 
 ## Architecture
+
+So the main goal of project will be provide GraphQl Api for clients. After sending request, App Sync will proceed it to resolvers that first querying database and after it handle db response. Then App Sync will return requested data to the client.
 
 ```mermaid
 flowchart TB
@@ -111,9 +114,72 @@ AppSync Tutorial
 
 # Code
 
+## GraphQl Schema
+
+A GraphQl Schema is a core of any GraphQl server. This schema defines all available functionality. Inside this schema we should describe our data types and let say methods. Where **Queries** are methods to **retrieve** data and **Mutations** are for modifying it (create, update, delete).
+
+```graphql
+type Mutation {
+  createProject(title: String!): Project
+  updateProject(id: ID, tittle: String): Project
+  deleteProject(id: ID): Project
+  createTask(input: TaskInput): Task
+}
+
+type Project {
+  id: ID!
+  title: String!
+  tasks: [Task]
+}
+
+type Query {
+  project(id: ID!): Project
+  # Get a single value of type 'Task' by primary key.
+  task(id: ID!): Task
+  # Get an array of type 'Task'.
+  tasks(orderBy: TasksOrderBY): [Task]
+}
+
+type SubTask {
+  id: ID!
+  title: String!
+  description: String
+  task: Task!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  project: Project!
+}
+
+input TaskInput {
+  id: ID!
+  title: String!
+  description: String!
+  projectId: ID!
+}
+
+enum TasksOrderBY {
+  ID_DESC
+  ID_ASC
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+```
+
 ## Main (AppSync)
 
-First We need to create main file to bootstrap provisioning. Provide AWS and define AppSync, data sources, api key, GraphQl schema
+First We need to create main terraform file to bootstrap provisioning. Provide AWS and define AppSync, data sources, api key, GraphQl schema.
+Inside appsync resource definition we describe name, schema (path to the graphql schema file), authentication type. Also we need to set explicit dependency to tell Terraform that AppSync resource must be created after db creation.
+Then we need to describe **aws_appsync_graphql_api** and **aws_appsync_datasource**.
+Datasource is a persistent storage system or a trigger, along with credentials for accessing that system or trigger. Your application state is managed by the system or trigger defined in a data source. Examples of data sources include NoSQL databases, relational databases, AWS Lambda functions, and HTTP APIs. We use rds as data source so as type we set "RELATIONAL_DATABASE". Inside **relational_database_config** we describe **http_endpoint_config** specify db name, db cluster and SSM arn's.
+Because in this resources we describe dependencies via implicit linking (for ex. api_id or db_cluster_identifier properties).
+You can note that service role for datasource also specified here. We will create role for it later.
 
 **Here is resource definition.**
 file: `main.tf`
@@ -171,7 +237,8 @@ resource "aws_appsync_datasource" "rds" {
 
 ## Database (AWS Aurora)
 
-Definig Aurora Cluster resource and secret manage to store user and password for it
+Secondly let's define Aurora Cluster resource and secret manage to store user and password for it. Inside AWS Secrets MAnager we will store all db credentioal data and its host, engine, name.
+As database we choice Aurora Serverless v1 with 5.7.mysql_aurora.2.07.1, because only this version has Web Api which enable the SQL HTTP endpoint, a connectionless Web Service API for running SQL queries against this database. When the SQL HTTP endpoint is enabled, you can also query your database from inside the RDS console (these features are free to use).
 
 **Here is resource definition.**
 file: `db.tf`
@@ -224,9 +291,12 @@ resource "aws_rds_cluster" "cluster" {
 
 ## Resolvers
 
-Definig reolvers to handles GraphQl requests
+Definig reolvers to handles GraphQl requests. A function that converts the GraphQL payload to the underlying storage system protocol and executes if the caller is authorized to invoke it. Resolvers are comprised of request and response mapping templates, which contain transformation and execution logic.
 
 ### Terraform file
+
+First we need to descibe our resolver resources, so Terraform will create it. Inside each aws_appsync_resolver resource block we specify AppSync Api id, resolvers type: Query or mutation, field with wich we want to associate this resolver and data source arn.
+Also we should add pathes to request and response temppate files.
 
 file: `resolvers.tf`
 
@@ -296,7 +366,6 @@ Quick Reference:
 - $context.result: The value returned by the resolver from the data source. The shape of this object \* depends on the data source and operation.
 - $util.toJson(): Serialize an object as JSON. This is often used with $context.arguments. For example, $util.toJson($context.arguments).
 - $util.autoId(): Automatically generate a v4 UUID on the server.
-
 - // ## A single-line comment \*\*
 
 **Here is createProject request definition.**
