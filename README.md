@@ -518,7 +518,3 @@ AWS Appsync doesn’t compare to your if you are building mobile or web applicat
 - [Hasura](https://hasura.io/) (open-source, Postgres Based)
 - [Apollo](https://www.apollographql.com/docs/apollo-server/) (open-source; a managed version)
 - [Prisma](https://www.prisma.io/v5) (open-source; a managed version)
-
-```
-
-```
