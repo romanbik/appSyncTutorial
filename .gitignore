@@ -50,3 +50,7 @@ coverage
 
 # Env files
 .env
+
+# Utils
+.DS_Store
+tree.sh
