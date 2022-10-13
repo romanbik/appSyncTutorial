@@ -16,6 +16,8 @@
   - [Resolvers](#resolvers)
     - [Terraform file](#terraform-file)
     - [VTL files](#vtl-files)
+- [Deployment](#deployment)
+- [Testing](#testing)
 - [Conclusion](#conclusion)
 
 ---
