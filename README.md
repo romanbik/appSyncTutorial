@@ -76,8 +76,15 @@ resolver[Resolver]
 AppSync Tutorial
 .
 |-- ./LICENSE
-|-- ./schema.graphql									// GraphQl Schema
-|-- ./api												// Velocity Templates for Resolvers
+|-- ./util.tf                           // terrafrom file for util resources.
+|-- ./output.tf
+|-- ./db
+|   `-- ./db/migrations
+|       `-- ./db/migrations/schema.sql  // migration file
+|-- ./variables.tf                      // terraform vars definition
+|-- ./db.tf                             // database definition
+|-- ./aim.tf                            // AIM roles and policies definition
+|-- ./api                               // VTL templates
 |   `-- ./api/mapping-templates
 |       |-- ./api/mapping-templates/default.request.vtl
 |       |-- ./api/mapping-templates/default.response.vtl
@@ -85,29 +92,25 @@ AppSync Tutorial
 |       |   |-- ./api/mapping-templates/project/getAll
 |       |   |-- ./api/mapping-templates/project/update
 |       |   |-- ./api/mapping-templates/project/getById
-|       |   |   |-- ./api/mapping-templates/project/getById/project.response.vtl
-|       |   |   `-- ./api/mapping-templates/project/getById/project.request.vtl
+|       |   |   |-- ./api/mapping-templates/project/getById/project.request.vtl
+|       |   |   `-- ./api/mapping-templates/project/getById/project.response.vtl
 |       |   |-- ./api/mapping-templates/project/create
 |       |   |   `-- ./api/mapping-templates/project/create/createProject.request.vtl
 |       |   `-- ./api/mapping-templates/project/delete
-|       |       |-- ./api/mapping-templates/project/delete/deleteProject.request.vtl
-|       |       `-- ./api/mapping-templates/project/delete/deleteProject.response.vtl
+|       |       |-- ./api/mapping-templates/project/delete/deleteProject.response.vtl
+|       |       `-- ./api/mapping-templates/project/delete/deleteProject.request.vtl
 |       `-- ./api/mapping-templates/task
-|           |-- ./api/mapping-templates/task/create
 |           |-- ./api/mapping-templates/task/delete
-|           `-- ./api/mapping-templates/task/getAll
-|-- ./util.tf											// terrafrom util resources
-|-- ./output.tf
-|-- ./resolvers.tf										// resolvers resources
-|-- ./aim.tf											// riles and policies
-|-- ./db												// database schema
-|   `-- ./db/migrations
-|       `-- ./db/migrations/schema.sql
-|-- ./db.tf												// database resource
-|-- ./main.tf											// main tf file
-|-- ./variables.tf
-|-- ./README.md
-`-- ./tree.sh%
+|           |-- ./api/mapping-templates/task/getAll
+|           |-- ./api/mapping-templates/task/create
+|           |   `-- ./api/mapping-templates/task/create/createTask.request.vtl
+|           `-- ./api/mapping-templates/task/getById
+|               |-- ./api/mapping-templates/task/getById/task.response.vtl
+|               `-- ./api/mapping-templates/task/getById/task.request.vtl
+|-- ./schema.graphql                      // GraphQL schema
+|-- ./resolvers.tf                        // Resolvers definition
+|-- ./main.tf                             // Main resource terraform file
+`-- ./README.md%
 ```
 
 ---
@@ -508,9 +511,25 @@ $util.toJson($output)
 
 ---
 
+# Deployment
+
+Just run `terraform init`, then `terraform plan` to see what resource will be create, destroyed or modified. And finally run `terraform apply` to deploy everything.
+
+_Note: After database creation, go to AWS RDS console, select your db and inside **Query Editor** run migration **schema.sql** script to create tables._
+
+---
+
+# Testing
+
+To test our Api we can use AppSync queries tab.
+
+![picture alt](testing.png "Title is optional")
+
+---
+
 # Conclusion
 
-That it! It It may have seemed like a lot, but in reality we have only several Terraform files that will create all needed infrastructure. It is way more easier and faster than to create it all manualy and destroy after.
+That it! We managed to create AppSync Api, with Aurora Serverless as data source, create resolvers to retrieve and modify data. It It may have seemed like a lot, but in reality we have only several Terraform files that will create all needed infrastructure. It is way more easier and faster than to create it all manualy and destroy after.
 
 Though it is possible to construct your AppSync Api without using any backend app or lambdas, it is recommended to omit this Velocity Templates based approach. You’re unlikely to work with it anywhere else unless you’re maintaining Java-based web applications from the beginning of the 21st century. Velocity Templates are hard to test and powerful enough to ruin your application’s logic. Also in this tutorial we didn’t implement any query sanitation, but keep in mind the query injection problem too.
 AWS Appsync doesn’t compare to your if you are building mobile or web applications outside the AWS ecosystem. In this case, consider other managed GraphQL engines:
