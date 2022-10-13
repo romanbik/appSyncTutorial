@@ -519,13 +519,15 @@ Just run `terraform init`, then `terraform plan` to see what resource will be cr
 
 _Note: After database creation, go to AWS RDS console, select your db and inside **Query Editor** run migration **schema.sql** script to create tables._
 
+![picture alt](tables.png "Testing AppSync api")
+
 ---
 
 # Testing
 
 To test our Api we can use AppSync queries tab.
 
-![picture alt](testing.png "Title is optional")
+![picture alt](testing.png "Testing AppSync api")
 
 ---
 
