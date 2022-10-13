@@ -55,7 +55,7 @@ run migration file located in /db onside AWS query editor to create tables
 
 So the main goal of project will be provide GraphQl Api for **Clients**. After **Client** send **Operation** - query (read-only fetch), mutation (write followed by a fetch), or subscription (long-lived requests that receive data in response to events), **App Sync** will proceed it to **Resolvers** that first querying **Aurora Database** and after it handle db response. Then **App Sync** will return requested data to the **Client** as **Action** - this action is a notification to connected subscribers, which is the result of a mutation. Clients become subscribers through a handshake process following a GraphQL subscription.
 
-![picture alt](appsync.drawio.png "Tables creation")
+![picture alt](appsync.drawio.png "Architecture")
 
 ---
 
