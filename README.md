@@ -10,15 +10,12 @@
   - [Architecture](#architecture)
   - [Project structure](#project-structure)
 - [Code](#code)
-  - [Ory/Kratos](#orykratos)
-    - [Identity definition](#identity-definition)
-    - [Kratos cinfiguration](#kratos-config)
-  - [Hasura definition](#hasura-definition)
+  - [Main (AppSync)](#appsync)
+  - [Database (AWS Aurora)](#database-aurora)
     - [Webhook](#webhook)
-  - [Refine](#refine)
-    - [Resources](#resources)
-    - [Resoieces file structure](#resource-file-structure)
-    - [Refine authencation](#refine-authetication)
+  - [Resolvers](#resolvers)
+    - [Terraform file](#terraform)
+    - [VTL files](#vtl-files)
 - [Conclusion](#conclusion)
 
 ---
@@ -115,7 +112,7 @@ AppSync Tutorial
 
 # Code
 
-## Main (App Sync)
+## Main (AppSync)
 
 First We need to create main file to bootstrap provisioning. Provide AWS and define AppSync, data sources, api key, GraphQl schema
 
@@ -268,7 +265,7 @@ resource "aws_appsync_resolver" "getProject_resolver" {
 }
 ```
 
-### VTL file
+### VTL files
 
 Since we will not use the backend, we will describe all the logiс inside mapping templates.
 The request mapping template is written with the [Apache Velocity templating language (VTL)](https://velocity.apache.org/engine/1.7/vtl-reference.html) and translates a GraphQL request into a format that the data source can understand.
