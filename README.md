@@ -468,8 +468,10 @@ As you can see here we are also populating a project object.
 
 We received our task object and project to which this task belongs.
 Now we can retrieve project data and all corresponding tasks. For it let also create a resolver.
+Here we have two sql statements one for retrieving project and another for tasks data
 
 **Request mapping template:**
+
 file: `/api/mapping-templates/project/getById/project.request.vtl`
 
 ```vtl
@@ -487,8 +489,22 @@ Select statement for a relational database data source
 }
 ```
 
+Inside response template we firstly set project data and after - task
+
 **Response mapping template:**
 file: `/api/mapping-templates/project/getById/project.response.vtl`
+
+```vtl
+## Raise a GraphQL field error in case of a datasource invocation error
+#if($ctx.error)
+    $util.error($ctx.error.message, $ctx.error.type)
+#end
+#set($output = $utils.rds.toJsonObject($ctx.result)[0][0])
+## Make sure to handle instances where field are null
+## or don't exist acording to your business logic
+#set($output.tasks = $utils.rds.toJsonObject($ctx.result)[1])
+$util.toJson($output)
+```
 
 ---
 
@@ -502,3 +518,7 @@ AWS Appsync doesn’t compare to your if you are building mobile or web applicat
 - [Hasura](https://hasura.io/) (open-source, Postgres Based)
 - [Apollo](https://www.apollographql.com/docs/apollo-server/) (open-source; a managed version)
 - [Prisma](https://www.prisma.io/v5) (open-source; a managed version)
+
+```
+
+```
